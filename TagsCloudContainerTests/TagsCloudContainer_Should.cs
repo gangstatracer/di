@@ -10,12 +10,21 @@ namespace TagsCloudContainerTests
     public class TagsCloudContainer_Should
     {
         private Container container;
-        private IWordsPreprocessor wordsPreprocessor;
+        private IWordsPreprocessor wordsPreprocessor1;
+        private IWordsPreprocessor wordsPreprocessor2;
+        private IWordsFilter wordsFilter1;
+        private IWordsFilter wordsFilter2;
+        private IWordsFramer wordsFramer;
+        private readonly IList<string> defaultWords = new List<string> {"di", "solid", "mocking", "unit", "to"};
         [SetUp]
         public void SetUp()
         {
-            wordsPreprocessor = A.Fake<IWordsPreprocessor>();
-            container = new Container(wordsPreprocessor);
+            wordsPreprocessor1 = A.Fake<IWordsPreprocessor>();
+            wordsPreprocessor2 = A.Fake<IWordsPreprocessor>();
+            wordsFilter1 = A.Fake<IWordsFilter>();
+            wordsFilter2 = A.Fake<IWordsFilter>();
+            wordsFramer = A.Fake<IWordsFramer>();
+            container = new Container(new [] {wordsPreprocessor1, wordsPreprocessor2}, new [] {wordsFilter1, wordsFilter2}, wordsFramer);
         }
 
         [Test]
@@ -26,11 +35,19 @@ namespace TagsCloudContainerTests
         }
 
         [Test]
-        public void CallPreprocessor()
+        public void CallAllPreprocessors()
         {
-            var words = new[] {"a"};
-            container.GetTagsCloud(words);
-            A.CallTo(() => wordsPreprocessor.Process(null)).WithAnyArguments().MustHaveHappened();
+            container.GetTagsCloud(defaultWords);
+            A.CallTo(() => wordsPreprocessor1.Process(null)).WithAnyArguments().MustHaveHappened();
+            A.CallTo(() => wordsPreprocessor2.Process(null)).WithAnyArguments().MustHaveHappened();
+        }
+
+        [Test]
+        public void CallAllWordsFilters()
+        {
+            container.GetTagsCloud(defaultWords);
+            A.CallTo(() => wordsFilter1.GetFiltered(null)).WithAnyArguments().MustHaveHappened();
+            A.CallTo(() => wordsFilter2.GetFiltered(null)).WithAnyArguments().MustHaveHappened();
         }
     }
 }

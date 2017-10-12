@@ -41,10 +41,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FrequencyFramer.cs" />
+    <Compile Include="ICloudLayouter.cs" />
+    <Compile Include="IWordsBitmapWriter.cs" />
+    <Compile Include="IWordsFilter.cs" />
+    <Compile Include="IWordsFramer.cs" />
     <Compile Include="IWordsPreprocessor.cs" />
     <Compile Include="LowerCasingWordsPreprocessor.cs" />
+    <Compile Include="BlackListFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TagsCloudContainer.cs" />
+    <Compile Include="WordsBitmapWriter.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
