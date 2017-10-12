@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 
@@ -10,12 +12,16 @@ namespace TagsCloudContainer
         private readonly IWordsPreprocessor[] wordsPreprocessors;
         private readonly IWordsFilter[] wordsFilters;
         private readonly IWordsFramer wordsFramer;
+        private readonly ICloudLayouter cloudLayouter;
+        private readonly IWordsBitmapWriter bitmapWriter;
 
-        public Container(IWordsPreprocessor[] wordsPreprocessors, IWordsFilter[] wordsFilters, IWordsFramer wordsFramer, ICloudLayouter cloudLayouter)
+        public Container(IWordsPreprocessor[] wordsPreprocessors, IWordsFilter[] wordsFilters, IWordsFramer wordsFramer, ICloudLayouter cloudLayouter, IWordsBitmapWriter bitmapWriter)
         {
             this.wordsPreprocessors = wordsPreprocessors;
             this.wordsFilters = wordsFilters;
             this.wordsFramer = wordsFramer;
+            this.cloudLayouter = cloudLayouter;
+            this.bitmapWriter = bitmapWriter;
         }
         public Stream GetTagsCloud(IEnumerable<string> words)
         {
@@ -37,8 +43,11 @@ namespace TagsCloudContainer
 
             var frames = wordsFramer.BuildFrames(wordsList);
 
+            var layoutedWords = frames.Select(frame => Tuple.Create(frame.Item1, cloudLayouter.PutNextRectangle(frame.Item2))).ToList();
 
-            return new MemoryStream();
+            var result = new MemoryStream();
+            bitmapWriter.Write(layoutedWords).Save(result, ImageFormat.Bmp);
+            return result;
         }
     }
 }
