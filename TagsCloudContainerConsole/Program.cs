@@ -26,7 +26,7 @@ namespace TagsCloudContainerConsole
             builder.Register(c => new WordsBitmapWriter(c.Resolve<IWordsColorGenerator>(), options.FontFamily, options.Background, imageSize))
                 .As<IWordsBitmapWriter>();
             builder.Register(c => new CircularCloudLayouter(new Point(100, 100))).As<ICloudLayouter>();
-            builder.RegisterType<Container>().AsSelf();
+            builder.RegisterType<CloudContainer>().AsSelf();
             _container = builder.Build();
 
         }
@@ -43,7 +43,7 @@ namespace TagsCloudContainerConsole
                     options.BlackList.AddRange(prepositionsBlackList);
                 }
 
-                var tagsCloudContainer = _container.Resolve<Container>(new NamedParameter("imageFormat", options.Format));
+                var tagsCloudContainer = _container.Resolve<CloudContainer>(new NamedParameter("imageFormat", options.Format));
                 
                 using (var input = File.OpenText(options.InputFile))
                 {

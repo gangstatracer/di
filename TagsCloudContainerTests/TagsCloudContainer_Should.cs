@@ -15,7 +15,7 @@ namespace TagsCloudContainerTests
 {
     public class TagsCloudContainer_Should
     {
-        private Container container;
+        private CloudContainer container;
         private IWordsPreprocessor wordsPreprocessor1;
         private IWordsPreprocessor wordsPreprocessor2;
         private IWordsFilter wordsFilter1;
@@ -48,7 +48,7 @@ namespace TagsCloudContainerTests
             A.CallTo(() => layouter.PutNextRectangle(Size.Empty)).WithAnyArguments().Returns(Rectangle.Empty);
             A.CallTo(() => writer.Write(null)).WithAnyArguments().Returns(bitmapResult);
 
-            container = new Container(
+            container = new CloudContainer(
                 new [] {wordsPreprocessor1, wordsPreprocessor2}, 
                 new [] {wordsFilter1, wordsFilter2}, 
                 wordsFramer, 
@@ -89,7 +89,7 @@ namespace TagsCloudContainerTests
         [Test]
         public void IntegrateSuccessfullyWith_LowerCasingPreprocessor_BlackListFilter_FrequencyFramer_BitmapWriter()
         {
-            container = new Container(
+            container = new CloudContainer(
                 new IWordsPreprocessor[]{new LowerCasingWordsPreprocessor()},
                 new IWordsFilter[]{new BlackListFilter(new []{"to"}) },
                 new FrequencyHeighter(50, 10),

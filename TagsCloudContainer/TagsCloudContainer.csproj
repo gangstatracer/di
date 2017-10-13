@@ -52,7 +52,7 @@
     <Compile Include="LowerCasingWordsPreprocessor.cs" />
     <Compile Include="BlackListFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Container.cs" />
+    <Compile Include="CloudContainer.cs" />
     <Compile Include="WordsBitmapWriter.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
