@@ -14,14 +14,16 @@ namespace TagsCloudContainer
         private readonly IWordsHeighter wordsFramer;
         private readonly ICloudLayouter cloudLayouter;
         private readonly IWordsBitmapWriter bitmapWriter;
+        private readonly ImageFormat imageFormat;
 
-        public Container(IWordsPreprocessor[] wordsPreprocessors, IWordsFilter[] wordsFilters, IWordsHeighter wordsFramer, ICloudLayouter cloudLayouter, IWordsBitmapWriter bitmapWriter)
+        public Container(IWordsPreprocessor[] wordsPreprocessors, IWordsFilter[] wordsFilters, IWordsHeighter wordsFramer, ICloudLayouter cloudLayouter, IWordsBitmapWriter bitmapWriter, ImageFormat imageFormat)
         {
             this.wordsPreprocessors = wordsPreprocessors;
             this.wordsFilters = wordsFilters;
             this.wordsFramer = wordsFramer;
             this.cloudLayouter = cloudLayouter;
             this.bitmapWriter = bitmapWriter;
+            this.imageFormat = imageFormat;
         }
         public Stream GetTagsCloud(IEnumerable<string> words)
         {
@@ -54,7 +56,7 @@ namespace TagsCloudContainer
                 .Select(ws => Tuple.Create(ws.Item1, cloudLayouter.PutNextRectangle(ws.Item2))).ToList();
 
             var result = new MemoryStream();
-            bitmapWriter.Write(layoutedWords).Save(result, ImageFormat.Bmp);
+            bitmapWriter.Write(layoutedWords).Save(result, imageFormat);
             result.Seek(0, SeekOrigin.Begin);
             return result;
         }

@@ -8,15 +8,15 @@ namespace TagsCloudContainerConsole
     {
         public IEnumerable<string> GetWords(TextReader reader)
         {
-            string line;
-            do
+            var line = reader.ReadLine();
+            while(line != null)
             {
-                line = reader.ReadLine() ?? string.Empty;
                 foreach (var token in Regex.Split(line, "\\W"))
                 {
                     yield return token;
                 }
-            } while (line != string.Empty);
+                line = reader.ReadLine();
+            }
         }
     }
 }

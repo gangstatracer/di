@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing.Imaging;
 using CommandLine;
 using CommandLine.Text;
@@ -42,6 +43,8 @@ namespace TagsCloudContainerConsole
             }
         }
 
-        internal string OutPutFileName => $"{OutputFile}.{ImageFormat}";
+        internal string OutPutFileName => $"{OutputFile}.{ImageFormat.ToString().ToLower()}";
+
+        internal List<string> BlackList { get; set; } = new List<string>();
     }
 }

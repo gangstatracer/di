@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Security.Permissions;
@@ -52,7 +53,7 @@ namespace TagsCloudContainerTests
                 new [] {wordsFilter1, wordsFilter2}, 
                 wordsFramer, 
                 layouter, 
-                writer);
+                writer, ImageFormat.Bmp);
         }
 
         [Test]
@@ -93,7 +94,7 @@ namespace TagsCloudContainerTests
                 new IWordsFilter[]{new BlackListFilter(new []{"to"}) },
                 new FrequencyHeighter(50, 10),
                 new CircularCloudLayouter(new Point(100, 100)),
-                new WordsBitmapWriter(new ConstantWordColorGenerator(Color.Brown), "Arial", Color.AliceBlue));
+                new WordsBitmapWriter(new ConstantWordColorGenerator(Color.Brown), "Arial", Color.AliceBlue), ImageFormat.Bmp);
             var stream = container.GetTagsCloud(defaultWords);
             using (var output = File.OpenWrite("result.bmp"))
             {
