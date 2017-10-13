@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace TagsCloudContainer
 {
-    public class Container
+    public class CloudContainer
     {
         private readonly IWordsPreprocessor[] wordsPreprocessors;
         private readonly IWordsFilter[] wordsFilters;
@@ -16,7 +16,7 @@ namespace TagsCloudContainer
         private readonly IWordsBitmapWriter bitmapWriter;
         private readonly ImageFormat imageFormat;
 
-        public Container(IWordsPreprocessor[] wordsPreprocessors, IWordsFilter[] wordsFilters, IWordsHeighter wordsFramer, ICloudLayouter cloudLayouter, IWordsBitmapWriter bitmapWriter, ImageFormat imageFormat)
+        public CloudContainer(IWordsPreprocessor[] wordsPreprocessors, IWordsFilter[] wordsFilters, IWordsHeighter wordsFramer, ICloudLayouter cloudLayouter, IWordsBitmapWriter bitmapWriter, ImageFormat imageFormat)
         {
             this.wordsPreprocessors = wordsPreprocessors;
             this.wordsFilters = wordsFilters;
@@ -43,7 +43,7 @@ namespace TagsCloudContainer
             wordsList = wordsFilters
                 .Aggregate(wordsEnumerable, (current, filter) => filter.GetFiltered(current)).ToList();
 
-            var wordsWithHeights = wordsFramer.GetWithHeights(wordsList);
+            var wordsWithHeights = wordsFramer.GetWithHeights(wordsList).OrderByDescending(wh => wh.Item2);
             var wordsWithSizes = wordsWithHeights.Select(wh => Tuple.Create(
                     wh.Item1,
                     new Size(
