@@ -17,6 +17,26 @@ namespace TagsCloudContainer
             this.fontFamily = fontFamily;
             this.backgroundColor = backgroundColor;
         }
+
+        private Tuple<int, SizeF> AdjustFontSizeTo(string word, Func<SizeF, bool> sizeRestriction)
+        {
+            var bitmap = new Bitmap(1, 1);
+            var graphics = Graphics.FromImage(bitmap);
+            var fontSize = 0;
+            SizeF stringSize;
+            do
+            {
+                fontSize++;
+                stringSize = graphics.MeasureString(word, new Font(fontFamily, fontSize));
+            } while (sizeRestriction(stringSize));
+            return Tuple.Create(fontSize - 1, graphics.MeasureString(word, new Font(fontFamily, fontSize - 1)));
+        }
+
+        public float GetWordWidth(string word, int height)
+        {
+            return AdjustFontSizeTo(word, size => size.Height <= height).Item2.Width;
+        }
+
         public Bitmap Write(IList<Tuple<string, Rectangle>> wordFrames)
         {
             var rectangles = wordFrames.Select(f => f.Item2).ToList();
@@ -30,18 +50,10 @@ namespace TagsCloudContainer
             drawing.FillRectangle(new SolidBrush(backgroundColor), new Rectangle(0, 0, bitmap.Width, bitmap.Height));
             foreach (var frame in shifted)
             {
-                var fontSize = 0;
-                SizeF stringSize;
-                do
-                {
-                    fontSize++;
-                    stringSize = drawing.MeasureString(frame.Item1, new Font(fontFamily, fontSize));
-                } while (stringSize.Height <= frame.Item2.Height && stringSize.Width <= frame.Item2.Width);
-                drawing.DrawString(frame.Item1, new Font(fontFamily, fontSize - 1), new SolidBrush(colorGenerator.GetColor(frame.Item1)), frame.Item2);
-                drawing.DrawRectangle(Pens.Black, frame.Item2);
-                drawing.DrawImage(bitmap, frame.Item2.Location);
+                var fontSize = AdjustFontSizeTo(frame.Item1,
+                    stringSize => stringSize.Height <= frame.Item2.Height && stringSize.Width <= frame.Item2.Width).Item1;
+                drawing.DrawString(frame.Item1, new Font(fontFamily, fontSize), new SolidBrush(colorGenerator.GetColor(frame.Item1)), frame.Item2);
             }
-
             return bitmap;
         }
     }

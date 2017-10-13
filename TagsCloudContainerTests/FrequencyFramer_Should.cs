@@ -13,8 +13,8 @@ namespace TagsCloudContainerTests
         public void ReturnEqualHeightSizes_WhenZeroStep()
         {
             var minHeight = 10;
-            var framer = new FrequencyFramer(minHeight, 0);
-            framer.BuildFrames(defaultWords).All(t => t.Item2.Height == minHeight).Should().BeTrue();
+            var framer = new FrequencyHeighter(minHeight, 0);
+            framer.GetWithHeights(defaultWords).All(t => t.Item2 == minHeight).Should().BeTrue();
         }
     }
 }

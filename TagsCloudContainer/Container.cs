@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
@@ -10,11 +11,11 @@ namespace TagsCloudContainer
     {
         private readonly IWordsPreprocessor[] wordsPreprocessors;
         private readonly IWordsFilter[] wordsFilters;
-        private readonly IWordsFramer wordsFramer;
+        private readonly IWordsHeighter wordsFramer;
         private readonly ICloudLayouter cloudLayouter;
         private readonly IWordsBitmapWriter bitmapWriter;
 
-        public Container(IWordsPreprocessor[] wordsPreprocessors, IWordsFilter[] wordsFilters, IWordsFramer wordsFramer, ICloudLayouter cloudLayouter, IWordsBitmapWriter bitmapWriter)
+        public Container(IWordsPreprocessor[] wordsPreprocessors, IWordsFilter[] wordsFilters, IWordsHeighter wordsFramer, ICloudLayouter cloudLayouter, IWordsBitmapWriter bitmapWriter)
         {
             this.wordsPreprocessors = wordsPreprocessors;
             this.wordsFilters = wordsFilters;
@@ -40,9 +41,17 @@ namespace TagsCloudContainer
             wordsList = wordsFilters
                 .Aggregate(wordsEnumerable, (current, filter) => filter.GetFiltered(current)).ToList();
 
-            var frames = wordsFramer.BuildFrames(wordsList);
+            var wordsWithHeights = wordsFramer.GetWithHeights(wordsList);
+            var wordsWithSizes = wordsWithHeights.Select(wh => Tuple.Create(
+                    wh.Item1,
+                    new Size(
+                        (int) Math.Round(bitmapWriter.GetWordWidth(wh.Item1, wh.Item2)), 
+                        wh.Item2
+                        )
+                ));
 
-            var layoutedWords = frames.Select(frame => Tuple.Create(frame.Item1, cloudLayouter.PutNextRectangle(frame.Item2))).ToList();
+            var layoutedWords = wordsWithSizes
+                .Select(ws => Tuple.Create(ws.Item1, cloudLayouter.PutNextRectangle(ws.Item2))).ToList();
 
             var result = new MemoryStream();
             bitmapWriter.Write(layoutedWords).Save(result, ImageFormat.Bmp);

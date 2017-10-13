@@ -4,8 +4,8 @@ using System.Drawing;
 
 namespace TagsCloudContainer
 {
-    public interface IWordsFramer
+    public interface IWordsHeighter
     {
-        IEnumerable<Tuple<string, Size>> BuildFrames(IEnumerable<string> words);
+        IEnumerable<Tuple<string, int>> GetWithHeights(IEnumerable<string> words);
     }
 }
