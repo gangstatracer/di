@@ -16,7 +16,9 @@ namespace TagsCloudContainer
         }
         public IEnumerable<Tuple<string, int>> GetWithHeights(IEnumerable<string> words)
         {
-            return words.GroupBy(w => w).Select(g => Tuple.Create(g.Key, minHeight + heightStep * (g.Count() - 1)));
+            return words
+                .GroupBy(w => w)
+                .Select(g => Tuple.Create(g.Key, minHeight + heightStep * (g.Count() - 1)));
         }
     }
 }

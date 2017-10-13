@@ -16,7 +16,13 @@ namespace TagsCloudContainer
         private readonly IWordsBitmapWriter bitmapWriter;
         private readonly ImageFormat imageFormat;
 
-        public CloudContainer(IWordsPreprocessor[] wordsPreprocessors, IWordsFilter[] wordsFilters, IWordsHeighter wordsFramer, ICloudLayouter cloudLayouter, IWordsBitmapWriter bitmapWriter, ImageFormat imageFormat)
+        public CloudContainer(
+            IWordsPreprocessor[] wordsPreprocessors, 
+            IWordsFilter[] wordsFilters, 
+            IWordsHeighter wordsFramer, 
+            ICloudLayouter cloudLayouter, 
+            IWordsBitmapWriter bitmapWriter, 
+            ImageFormat imageFormat)
         {
             this.wordsPreprocessors = wordsPreprocessors;
             this.wordsFilters = wordsFilters;
