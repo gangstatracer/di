@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 
 namespace TagsCloudContainer
 {
@@ -16,7 +17,7 @@ namespace TagsCloudContainer
         }
         public IEnumerable<Tuple<string, Size>> BuildFrames(IEnumerable<string> words)
         {
-            throw new NotImplementedException();
+            return words.Select(w => Tuple.Create(w, new Size(w.Length * minHeight, minHeight)));
         }
     }
 }
