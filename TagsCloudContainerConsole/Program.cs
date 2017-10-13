@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
 using Autofac;
@@ -17,9 +16,14 @@ namespace TagsCloudContainerConsole
             builder.RegisterType<TextWordsReader>().As<IWordsReader>();
             builder.Register(c => new BlackListFilter(options.BlackList)).As<IWordsFilter>();
             builder.RegisterType<LowerCasingWordsPreprocessor>().As<IWordsPreprocessor>();
-            builder.Register(c => new ConstantWordColorGenerator(Color.DarkOrange)).As<IWordsColorGenerator>();
+            builder.Register(c => new ConstantWordColorGenerator(options.Foreground)).As<IWordsColorGenerator>();
             builder.Register(c => new FrequencyHeighter(10, 10)).As<IWordsHeighter>();
-            builder.Register(c => new WordsBitmapWriter(c.Resolve<IWordsColorGenerator>(), options.FontFamily, Color.DarkSeaGreen))
+
+            var imageSize = options.Width > 0 && options.Height > 0
+                ? new Size(options.Width, options.Height)
+                : Size.Empty;
+
+            builder.Register(c => new WordsBitmapWriter(c.Resolve<IWordsColorGenerator>(), options.FontFamily, options.Background, imageSize))
                 .As<IWordsBitmapWriter>();
             builder.Register(c => new CircularCloudLayouter(new Point(100, 100))).As<ICloudLayouter>();
             builder.RegisterType<Container>().AsSelf();
@@ -49,6 +53,7 @@ namespace TagsCloudContainerConsole
                         result.CopyTo(output);
                     }
                 }
+                Console.WriteLine($"Result written to {options.OutPutFileName}");
             }
         }
     }

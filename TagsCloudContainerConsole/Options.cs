@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Drawing.Imaging;
 using CommandLine;
 using CommandLine.Text;
@@ -46,5 +47,20 @@ namespace TagsCloudContainerConsole
         internal string OutPutFileName => $"{OutputFile}.{ImageFormat.ToString().ToLower()}";
 
         internal List<string> BlackList { get; set; } = new List<string>();
+
+        [Option('c',"color", DefaultValue = "Black", HelpText = "Words color")]
+        public string ForegroundColor {
+            get { return Foreground.Name; }
+            set { Foreground = Color.FromName(value); }
+        }
+        internal Color Foreground { get; set; }
+
+        [Option('b', "background-color", DefaultValue = "White", HelpText = "Background color")]
+        public string BackgroundColor
+        {
+            get { return Background.Name; }
+            set { Background = Color.FromName(value); }
+        }
+        internal Color Background { get; set; }
     }
 }
